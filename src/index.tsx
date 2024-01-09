@@ -3,7 +3,7 @@ import { useFetch } from "@raycast/utils";
 import { parse } from "valibot";
 import { response_schema } from "./schema";
 import type { ResponseType } from "./schema";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 function Docs({
   docs_map,
@@ -51,21 +51,27 @@ export default function Command() {
   const svelte_items = parse(response_schema, unparsed_svelte_items);
   const sveltekit_items = parse(response_schema, unparsed_sveltekit_items);
 
-  const svelte_mapped = new Map();
-  for (const block of svelte_items?.blocks ?? []) {
-    if (!svelte_mapped.has(block.breadcrumbs[0])) {
-      svelte_mapped.set(block.breadcrumbs[0], []);
+  const svelte_mapped = useMemo(() => {
+    const svelte_mapped = new Map();
+    for (const block of svelte_items?.blocks ?? []) {
+      if (!svelte_mapped.has(block.breadcrumbs[0])) {
+        svelte_mapped.set(block.breadcrumbs[0], []);
+      }
+      svelte_mapped.get(block.breadcrumbs[0]).push(block);
     }
-    svelte_mapped.get(block.breadcrumbs[0]).push(block);
-  }
+    return svelte_mapped;
+  }, [svelte_items]);
 
-  const sveltekit_mapped = new Map();
-  for (const block of sveltekit_items?.blocks ?? []) {
-    if (!sveltekit_mapped.has(block.breadcrumbs[0])) {
-      sveltekit_mapped.set(block.breadcrumbs[0], []);
+  const sveltekit_mapped = useMemo(() => {
+    const sveltekit_mapped = new Map();
+    for (const block of sveltekit_items?.blocks ?? []) {
+      if (!sveltekit_mapped.has(block.breadcrumbs[0])) {
+        sveltekit_mapped.set(block.breadcrumbs[0], []);
+      }
+      sveltekit_mapped.get(block.breadcrumbs[0]).push(block);
     }
-    sveltekit_mapped.get(block.breadcrumbs[0]).push(block);
-  }
+    return sveltekit_mapped;
+  }, [sveltekit_items]);
 
   return (
     <List
