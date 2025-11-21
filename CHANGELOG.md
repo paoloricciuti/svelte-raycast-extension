@@ -1,5 +1,9 @@
 # Svelte Docs Changelog
 
+## [Use new cli option in cli composer] - {PR_MERGE_DATE}
+
+Uses the new `--add` cli option for the cli composer
+
 ## [Fix cli composer generation] - 2025-11-05
 
 Take into account skip_addons for the create generation and show package manager dropdown in add cli
